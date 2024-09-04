@@ -1,0 +1,26 @@
+
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: social_network_api-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+    ports:
+      - "3309:3306"  # Change host port if needed
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  web:
+    build: .
+    container_name: social_network_api-web
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: mysql://root:${DATABASE_PASSWORD}@db/${DATABASE_NAME}
+
+volumes:
+  mysql_data:
